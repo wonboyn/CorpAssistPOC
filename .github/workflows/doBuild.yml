@@ -1,6 +1,6 @@
 #######################################################
-# This workflow gets triggered when a commit is made
-# to the develop branch.
+# This workflow gets triggered when a PR is merged
+# to the main branch.
 #
 # It performs the following tasks:
 #
@@ -9,18 +9,18 @@
 #    - initialize CodeQL
 #    - run CodeQL analysis
 #    - install dependencies
-#    - perform tests
+#    - save the artefacts
 #
 #######################################################
 
-name: Perform code checks
+name: Perform build
 on: 
-  push:
+  pull_request:
     branches:
-      - develop
+      - main
 
 jobs:
-  checks:
+  build:
 
     # Base image used
     runs-on: ubuntu-latest
@@ -35,6 +35,11 @@ jobs:
     env:
       dir-src: '${{ github.workspace }}/services/src'
       dir-tests: '${{ github.workspace }}/services/tests'
+    
+    # Services to be built
+    strategy:
+      matrix:
+         service: [businessName, router]
 
     # Build steps
     steps:
@@ -71,3 +76,21 @@ jobs:
     # Run CodeQL analysis
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v2
+   
+    # Install the dependencies
+    - name: Install dependencies
+      run: |
+        if [ -f ${{ env.dir-src }}/${{ matrix.service }}/requirements.txt ]; then
+           echo Found requirements file in: ${{ env.dir-src }}/${{ matrix.service }}
+           pip3 install --target=${{ env.dir-src }}/${{ matrix.service }} -r ${{ env.dir-src }}/${{ matrix.service }}/requirements.txt
+           ls -al ${{ env.dir-src }}/${{ matrix.service }}
+        else
+           echo No requirements file in: ${{ env.dir-src }}/${{ matrix.service }}
+        fi
+    
+    # Save the artefacts
+    - name: Save artefact
+      uses: actions/upload-artifact@v3
+      with:
+        name: ${{ matrix.service }}
+        path: ${{ env.dir-src }}/${{ matrix.service }}
