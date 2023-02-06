@@ -13,14 +13,14 @@
 #
 #######################################################
 
-name: Perform checks
+name: Perform code checks
 on: 
   push:
     branches:
       - develop
 
 jobs:
-  build:
+  checks:
 
     # Base image used
     runs-on: ubuntu-latest
