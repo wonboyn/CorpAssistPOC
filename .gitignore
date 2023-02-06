@@ -131,3 +131,6 @@ dmypy.json
 # Terrform components
 .terraform/
 .terraform.lock.hcl
+
+# Zips
+*.zip
