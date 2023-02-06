@@ -17,7 +17,7 @@ def router(event):
         return payload
     raise Exception('No environment variable for intent: ' + intent_name)
 
-def handler(event, context):
+def lambda_handler(event, context):
     print(event)
     response = router(event)
     return response
