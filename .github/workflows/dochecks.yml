@@ -1,0 +1,74 @@
+#######################################################
+# This workflow gets triggered when a commit is made
+# to the develop branch.
+#
+# It performs the following tasks:
+#
+#    - log the git branch/commit details
+#    - install Python v3.9
+#    - initialize CodeQL
+#    - run CodeQL analysis
+#    - install dependencies
+#    - perform tests
+#
+#######################################################
+
+name: Perform code checks
+on: 
+  push:
+    branches:
+      - develop
+
+jobs:
+  checks:
+
+    # Base image used
+    runs-on: ubuntu-latest
+
+    # Permissions
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+    
+    # Variables for the build job
+    env:
+      dir-src: '${{ github.workspace }}/services/src'
+      dir-tests: '${{ github.workspace }}/services/tests'
+      file-requirements: '${{ github.workspace }}/requirements.txt'
+
+    # Build steps
+    steps:
+    
+    # Do checkout
+    - name: Checkout
+      uses: actions/checkout@v3
+    
+    # Log basic info
+    - name: Log Info
+      run: |
+        echo Event: ${{ github.event_name }}
+        echo Git Ref: ${{ github.ref }}
+        echo Git SHA: ${{ github.sha }}
+        echo Source Directory ${{ env.dir-src }}: 
+        ls -al ${{ env.dir-src }}
+        echo Test Directory ${{ env.dir-tests }}: 
+        ls -al ${{ env.dir-tests }}
+    
+    # Setup Python
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+    
+    # Initialize CodeQL
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v2
+      with:
+        languages: python
+        setup-python-dependencies: false
+        config-file: ./.github/codeql/codeql-config.yml
+
+    # Run CodeQL analysis
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v2
