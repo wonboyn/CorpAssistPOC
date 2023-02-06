@@ -84,6 +84,9 @@ jobs:
            echo Found requirements file in: ${{ env.dir-src }}/${{ matrix.service }}
            pip3 install --target=${{ env.dir-src }}/${{ matrix.service }} -r ${{ env.dir-src }}/${{ matrix.service }}/requirements.txt
            ls -al ${{ env.dir-src }}/${{ matrix.service }}
+        else
+           echo No requirements file in: ${{ env.dir-src }}/${{ matrix.service }}
+        fi
     
     # # Upload artefact
     # - name: Upload artefact
