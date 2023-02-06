@@ -9,7 +9,7 @@
 #    - initialize CodeQL
 #    - run CodeQL analysis
 #    - install dependencies
-#    - build the artefacts
+#    - save the artefacts
 #
 #######################################################
 
@@ -88,11 +88,9 @@ jobs:
            echo No requirements file in: ${{ env.dir-src }}/${{ matrix.service }}
         fi
     
-    # # Upload artefact
-    # - name: Upload artefact
-    #   uses: actions/upload-artifact@v2
-    #   with:
-    #     name: SelfServiceBot
-    #     path: |
-    #       ${{ env.dir-src }}
-    #       !${{ env.dir-tests }}
+    # Save the artefacts
+    - name: Save artefact
+      uses: actions/upload-artifact@v3
+      with:
+        name: ${{ matrix.service }}
+        path: ${{ env.dir-src }}/${{ matrix.service }}
