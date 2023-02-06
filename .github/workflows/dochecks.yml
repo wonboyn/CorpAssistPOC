@@ -21,7 +21,15 @@ on:
 
 jobs:
   build:
+
+    # Base image used
     runs-on: ubuntu-latest
+
+    # Permissions
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
     
     # Variables for the build job
     env:
