@@ -8,7 +8,6 @@
 #    - install Python v3.9
 #    - initialize CodeQL
 #    - run CodeQL analysis
-#    - install dependencies
 #    - perform tests
 #
 #######################################################
