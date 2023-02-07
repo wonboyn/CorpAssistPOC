@@ -1,5 +1,5 @@
 import json
-import requests
+import urllib3
 
 # Constants
 base_url = "https://data.gov.au/data/api/3/action/datastore_search"
@@ -11,14 +11,17 @@ def lambda_handler(event, context):
     # Build url
     url = f"{base_url}?{data_set}&limit=1"
 
+    # Establish a handle
+    http = urllib3.PoolManager()
+
     # Make the call
     try:
-        response = requests.get(url)
+        response = http.request("GET", url)
 
     except Exception as error:
         print("Error in request: ", str(error))
 
     return {
         "statusCode": 200,
-        "body": response.json()
+        "body": json.loads(response.data.decode("utf-8"))
     }
