@@ -10,7 +10,7 @@
 resource "aws_api_gateway_rest_api" "api_gateway" {
   name          = var.api_gateway_name
   description   = var.api_gateway_desc
-  body          = templatefile("api_gateway_swagger.yaml", { ProcessMessage = aws_lambda_function.lambda_function.invoke_arn })
+  body          = templatefile("api_gateway_swagger.yaml", { ProcessMessage = module.lambda_function["router"].lambda_function_invoke_arn })
   endpoint_configuration {
     types = [var.api_gateway_endpoint_type] 
   }
